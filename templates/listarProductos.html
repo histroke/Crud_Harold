@@ -1,0 +1,55 @@
+{% include 'encabezado.html' %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🖥️ Inventario de Componentes PC</h2>
+    <a href="/frmAgregarProducto" class="btn btn-info fw-bold">➕ Nuevo Componente</a>
+</div>
+
+{% if mensaje %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-dark table-hover align-middle border-secondary">
+        <thead class="table-active text-info border-info">
+            <tr>
+                <th>Código</th>
+                <th>Foto</th>
+                <th>Componente</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in listaProductos %}
+            <tr>
+                <td><span class="badge bg-secondary">{{ producto.codigo }}</span></td>
+                <td>
+                    <img src="{{ url_for('static', filename='imagenes/' ~ producto._id ~ '.jpg') }}" 
+                         alt="Foto" class="rounded" style="width: 50px; height: 50px; object-fit: cover;"
+                         onerror="this.src='https://via.placeholder.com/50?text=PC';">
+                </td>
+                <td class="fw-bold">{{ producto.nombre }}</td>
+                <td><span class="badge bg-primary">{{ producto.categoria }}</span></td>
+                <td class="text-success fw-bold">${{ "{:,.0f}".format(producto.precio) }}</td>
+                <td class="text-center">
+                    <a href="/consultar/{{ producto._id }}" class="btn btn-warning btn-sm me-1">✏️ Editar</a>
+                    <a href="/eliminar/{{ producto._id }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro deseas eliminar este componente?');">🗑️ Eliminar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    No hay componentes registrados aún. ¡Agrega el primero! 🚀
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% include 'piePagina.html' %}
